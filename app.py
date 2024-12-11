@@ -150,7 +150,7 @@ if user_input:
 conversation_history = [["what is today's date", *st.session_state['questions']],
                         [current_date, *st.session_state['answers']]]
 
-# Switches from general mode to triage mode
+
 st.session_state['modes'].append({'mode': 'triage', 'timestamp': time.time()})
 st.session_state['questions'] = []
 st.session_state['answers'] = []
