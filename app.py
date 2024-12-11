@@ -23,7 +23,7 @@ st.info("National ID Agency of Ethiopia")
 st.sidebar.title("National ID Agency of Ethiopia's Help Chatbot")
 
 st.sidebar.markdown(
-    "1. Thumbs up 👍: click when you are satisfied by the answer provided by the chatbot \n 2. Thumbs down 👎: click when you are not satisfied by the answer provided by the chatbot \n 3. Talk to Health Coach: click when you are really disappointed by the answer provided by the chatbot and you feel like you would like to speak to a health coach about that topic than speak to the chatbot. \n \n \n \n \n \n \n \n"
+    "1. Thumbs up 👍: click when you are satisfied by the answer provided by the chatbot \n 2. Thumbs down 👎: click when you are not satisfied by the answer provided by the chatbot. \n \n \n \n \n \n \n \n"
 )
 
 # the system prompt template
@@ -34,7 +34,6 @@ fallbackrate_counter = 0
 
 default_states = {
     "messages": [],  # history of all exchanged messages with role and content
-    # feedback (thumbs up, thumbs down or talk to a health coach)
     "feedback": [],
     "feedback_timestamp": [],  # history of bot responses
     "answers": [],
@@ -164,7 +163,7 @@ st.session_state['prompt'] = pt.general_prompt
 if st.sidebar.button("End Session"):
     st.write(
         f"Your session has ended and your conversation has been saved. Thank you!")
-    # counting the number times the user clicked on thumbs up, thumbs down and talk to health coach
+    # counting the number times the user clicked on thumbs up, thumbs down
     element_counts = Counter(st.session_state['feedback'])
 
     # TODO: we can remove this line as it's not being used
