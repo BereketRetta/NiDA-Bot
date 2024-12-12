@@ -18,20 +18,9 @@ openai.api_key  = OPENAI_API_KEY
 class OpenAIHandler:
     """"OpenAI Handler handles and facilitates a chat gpt response by interfacing with all necessary classes."""
 
-
-    def __init__(self, OALogger=None, temperature = 0.0, model_name=OPENAI_MODEL, message_placeholder=None):
+    def __init__(self, temperature = 0.0, model_name=OPENAI_MODEL, message_placeholder=None):
         """Constructs all the necessary attributes for the class OpenAIHandler:
-        Args:
-            OALogger (Logger): OpenAI Handler logger
         """
-        if OALogger is None:
-            OALogger = logging.getLogger(__name__)
-            OALogger.setLevel(logging.INFO)
-            NidaHookConfig = {"FORMATTER_FORMAT": "%(levelname)s - %(asctime)s -  %(name)s: - %(message)s",
-                             "LOG_FILE": "OpenAIHandler.log"}
-            logging.Formatter(NidaHookConfig["FORMATTER_FORMAT"])
-            
-        self.OALogger = OALogger
         self.message_placeholder = message_placeholder
         
         self.turbo_llm = ChatOpenAI(
@@ -75,7 +64,6 @@ class OpenAIHandler:
         except Exception as e:
             chatbot_response = "It seems an error ocurred, our engineers are working very hard to get it working at the moment"
             raise e
-            self.OALogger.error(e)
 
         return chatbot_response
     
