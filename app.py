@@ -27,7 +27,10 @@ st.sidebar.title("National ID Agency of Ethiopia's Help Chatbot")
 # )
 
 # the system prompt template
-faq_sys_prompt = pt.general_prompt
+# if st.session_state['language'] == 'English':
+#     faq_sys_prompt = pt.general_prompt_english
+# else:
+#     faq_sys_prompt = pt.general_prompt_amharic
 
 # caounter for the fallback rate
 fallbackrate_counter = 0
@@ -42,11 +45,9 @@ default_states = {
     "questions_timestamp": [],
     "is_responding": False,
     "model": OPENAI_MODEL,
-    "prompt": pt.general_prompt,
+    "prompt": pt.general_prompt_amharic,
+    # "language": "Amharic",
     "temperature": 0,
-    "modes": [
-        {'mode': 'general', 'timestamp': time.time()}
-    ]
 }
 
 for key, value in default_states.items():
@@ -151,13 +152,16 @@ conversation_history = [["what is today's date", *st.session_state['questions']]
                         [current_date, *st.session_state['answers']]]
 
 
-st.session_state['modes'].append({'mode': 'triage', 'timestamp': time.time()})
 st.session_state['questions'] = []
 st.session_state['answers'] = []
 st.session_state.messages = []
 st.session_state['model'] = "gpt-4o-mini"
 st.session_state["temperature"] = 0.4
-st.session_state['prompt'] = pt.general_prompt
+
+# if st.session_state['language'] == 'English':
+#     st.session_state['prompt'] = pt.general_prompt_english
+# else:
+#     st.session_state['prompt'] = pt.general_prompt_amharic
 
 # adding a sidebar button to end the session and what happens when the button is clicked
 if st.sidebar.button("End Session"):
@@ -165,9 +169,6 @@ if st.sidebar.button("End Session"):
         f"Your session has ended and your conversation has been saved. Thank you!")
     # counting the number times the user clicked on thumbs up, thumbs down
     element_counts = Counter(st.session_state['feedback'])
-
-    # TODO: we can remove this line as it's not being used
-    is_triage = st.session_state['modes'][-1].get('mode') == 'triage'
 
     total_interactions = len(
         conversation_history[0]) + len(conversation_history[1])
@@ -187,7 +188,6 @@ if st.sidebar.button("End Session"):
         "Conversation": conversation_history,
         "question_timestamps": st.session_state['questions_timestamp'],
         "answer_timestamps": st.session_state['answers_timestamp'],
-        "modes": st.session_state['modes'],
     }
 
     with open(file_name, "w") as file:
