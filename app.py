@@ -17,6 +17,9 @@ from constants import (
 
 openai.api_key = OPENAI_API_KEY
 
+# Set up the page configuration
+st.set_page_config(page_title="National ID Agency of Ethiopia's Help Chatbot", page_icon="🤖", layout="wide")
+
 st.info("National ID Agency of Ethiopia")
 
 # Side bar information
@@ -28,9 +31,9 @@ st.sidebar.title("National ID Agency of Ethiopia's Help Chatbot")
 
 # the system prompt template
 # if st.session_state['language'] == 'English':
-#     faq_sys_prompt = pt.general_prompt_english
+#     faq_sys_prompt = pt.amharic_translation_prompt_english
 # else:
-#     faq_sys_prompt = pt.general_prompt_amharic
+#     faq_sys_prompt = pt.amharic_translation_prompt_amharic
 
 # caounter for the fallback rate
 fallbackrate_counter = 0
@@ -45,7 +48,7 @@ default_states = {
     "questions_timestamp": [],
     "is_responding": False,
     "model": OPENAI_MODEL,
-    "prompt": pt.general_prompt_amharic,
+    "prompt": pt.amharic_translation_prompt,
     # "language": "Amharic",
     "temperature": 0,
 }
@@ -158,10 +161,20 @@ st.session_state.messages = []
 st.session_state['model'] = "gpt-4o-mini"
 st.session_state["temperature"] = 0.4
 
-# if st.session_state['language'] == 'English':
-#     st.session_state['prompt'] = pt.general_prompt_english
-# else:
-#     st.session_state['prompt'] = pt.general_prompt_amharic
+
+st.sidebar.markdown("Change the language from English to Amharic")
+
+# Switches from English to Amharic
+btn = st.sidebar.button("Amharic Mode")
+if btn:
+    if(st.session_state['prompt'] == pt.amharic_translation_prompt):
+            st.session_state['prompt'] = pt.amharic_translation_prompt
+            st.write(f"The Chatbot is now in Amharic mode")
+    else:
+        st.session_state['prompt'] = pt.amharic_translation_prompt
+        st.write(f"The Chatbot is now in English mode")
+    
+st.sidebar.markdown("End the session to save the conversation for reference")
 
 # adding a sidebar button to end the session and what happens when the button is clicked
 if st.sidebar.button("End Session"):
