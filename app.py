@@ -135,6 +135,8 @@ if user_input:
         user_input_transliterated = None
     else:
         user_input_transliterated = get_transliteration(user_input, 1)
+        print("User input>>>> ", user_input)
+        print("Transliterated input>>>> ", user_input_transliterated)
 
     # creating memory for the chatbot (this takes conversation_history and keeps the last 5 question-answer pairs )
     memory = openAI.getMemoryConversation(conversation_history, 20)
