@@ -4,7 +4,8 @@ import time
 import datetime
 from collections import Counter
 import uuid
-
+import langid
+from Latin_to_Amh_Dict import RBLatAm
 import openai
 import streamlit as st
 
@@ -48,7 +49,7 @@ default_states = {
     "questions_timestamp": [],
     "is_responding": False,
     "model": OPENAI_MODEL,
-    "prompt": pt.amharic_translation_prompt,
+    "prompt": pt.general_prompt,
     # "language": "Amharic",
     "temperature": 0,
 }
@@ -84,6 +85,15 @@ openAI = OpenAIHandler(
 
 user_input = get_text()
 
+def get_transliteration(string, reverse=1):
+    for k, v in RBLatAm.items():
+      if not reverse:
+            string = string.replace(v, k)
+      else:
+            string = string.replace(k, v)
+    
+    return string
+
 
 def split_into_chunks(text, chunk_size):
     words = text.split()
@@ -116,10 +126,22 @@ if user_input:
     conversation_history = [["what is today's date", *st.session_state['questions']], [
         current_date, *st.session_state['answers']]]
 
+    language_code, confidence = langid.classify(user_input)
+
+    if language_code == 'en' or language_code == 'am':
+        user_input_transliterated = None
+    else:
+        user_input_transliterated = get_transliteration(user_input, 1)
+
     # creating memory for the chatbot (this takes conversation_history and keeps the last 5 question-answer pairs )
     memory = openAI.getMemoryConversation(conversation_history, 20)
 
-    data = dict(query=user_input, memory=memory,
+    if user_input_transliterated == None or user_input_transliterated == '':
+        main_input = user_input
+    else:
+        main_input = user_input_transliterated
+
+    data = dict(query=main_input, memory=memory,
                 template=st.session_state['prompt'])
 
     # display user message in chat message container
@@ -162,17 +184,17 @@ st.session_state['model'] = "gpt-4o-mini"
 st.session_state["temperature"] = 0.4
 
 
-st.sidebar.markdown("Change the language from English to Amharic")
+# st.sidebar.markdown("Change the language from English to Amharic")
 
 # Switches from English to Amharic
-btn = st.sidebar.button("Amharic Mode")
-if btn:
-    if(st.session_state['prompt'] == pt.amharic_translation_prompt):
-            st.session_state['prompt'] = pt.amharic_translation_prompt
-            st.write(f"The Chatbot is now in Amharic mode")
-    else:
-        st.session_state['prompt'] = pt.amharic_translation_prompt
-        st.write(f"The Chatbot is now in English mode")
+# btn = st.sidebar.button("Amharic Mode")
+# if btn:
+#     if(st.session_state['prompt'] == pt.amharic_translation_prompt):
+#             st.session_state['prompt'] = pt.amharic_translation_prompt
+#             st.write(f"The Chatbot is now in Amharic mode")
+#     else:
+#         st.session_state['prompt'] = pt.amharic_translation_prompt
+#         st.write(f"The Chatbot is now in English mode")
     
 st.sidebar.markdown("End the session to save the conversation for reference")
 
