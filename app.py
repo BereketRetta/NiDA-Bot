@@ -26,6 +26,8 @@ st.info("National ID Agency of Ethiopia")
 # Side bar information
 st.sidebar.title("National ID Agency of Ethiopia's Help Chatbot")
 
+st.sidebar.markdown("Please use English, and Amharic (with both Latin and Ge'ez alphabet)")
+
 # st.sidebar.markdown(
 #     "1. Thumbs up 👍: click when you are satisfied by the answer provided by the chatbot \n 2. Thumbs down 👎: click when you are not satisfied by the answer provided by the chatbot. \n \n \n \n \n \n \n \n"
 # )
