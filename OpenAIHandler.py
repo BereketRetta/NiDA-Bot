@@ -14,7 +14,6 @@ from streaming_callback import CustomStreamingStdOutCallbackHandler
 openai.organization = OPENAI_ORGANIZATION
 openai.api_key  = OPENAI_API_KEY
 
-
 class OpenAIHandler:
     """"OpenAI Handler handles and facilitates a chat gpt response by interfacing with all necessary classes."""
 
@@ -26,7 +25,7 @@ class OpenAIHandler:
         self.turbo_llm = ChatOpenAI(
             temperature= temperature,
             model_name= model_name,
-            streaming=True,
+            streaming=False,
             callbacks=[CustomStreamingStdOutCallbackHandler(message_placeholder=message_placeholder)]
         )
         

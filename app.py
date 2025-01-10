@@ -15,6 +15,21 @@ from constants import (
     OPENAI_MODEL,
     OPENAI_API_KEY,
 )
+import asyncio
+# Translation
+from googletrans import Translator
+
+translator = Translator()
+
+async def detect_language(text):
+    translator = Translator()
+    detected_lang = await translator.detect(text)
+    return detected_lang.lang
+
+async def translate_text(text, destination_lang):
+    translator = Translator()
+    translated_text_output = await translator.translate(text, dest=destination_lang)
+    return translated_text_output.text
 
 openai.api_key = OPENAI_API_KEY
 
@@ -26,7 +41,8 @@ st.info("National ID Agency of Ethiopia")
 # Side bar information
 st.sidebar.title("National ID Agency of Ethiopia's Help Chatbot - GPT version")
 
-st.sidebar.markdown("Please use English, and Amharic (with both Latin and Ge'ez alphabet)")
+st.sidebar.markdown("Please use English, Oromiffa, Tigregna and Amharic (with both Latin and Ge'ez alphabet), This one uses a translation layer; from Google translate so languages apart from English may seem weird. ")
+st.sidebar.markdown("N.B. The Amharic with Latin script, is still work in progress and you may see some inconsistencies. ")
 st.sidebar.markdown("N.B. --  While English works reasonably well Amharic is not as good, so try to be as specific as possible.")
 
 # st.sidebar.markdown(
@@ -129,24 +145,37 @@ if user_input:
     conversation_history = [["what is today's date", *st.session_state['questions']], [
         current_date, *st.session_state['answers']]]
 
-    language_code, confidence = langid.classify(user_input)
+    # language_code, confidence = langid.classify(user_input)
 
-    if language_code == 'en' or language_code == 'am':
+    language_code = asyncio.run(detect_language(user_input))
+
+    print(f"Detected language Q: {language_code}")
+
+    if language_code == 'en' or language_code == 'am' or language_code == 'om':
         user_input_transliterated = None
     else:
         user_input_transliterated = get_transliteration(user_input, 1)
         print("User input>>>> ", user_input)
         print("Transliterated input>>>> ", user_input_transliterated)
 
+    if user_input_transliterated == None or user_input_transliterated == '':
+        main_input = user_input
+        language_code = asyncio.run(detect_language(user_input))
+    else:
+        main_input = user_input_transliterated
+        language_code = asyncio.run(detect_language(user_input_transliterated))
+
+    if language_code != 'en':
+        Question_In_English = asyncio.run(translate_text(main_input, destination_lang='en'))
+    else:
+        Question_In_English = main_input
+
+    print(f"Question in English: {Question_In_English}")
+
     # creating memory for the chatbot (this takes conversation_history and keeps the last 5 question-answer pairs )
     memory = openAI.getMemoryConversation(conversation_history, 20)
 
-    if user_input_transliterated == None or user_input_transliterated == '':
-        main_input = user_input
-    else:
-        main_input = user_input_transliterated
-
-    data = dict(query=main_input, memory=memory,
+    data = dict(query=Question_In_English, memory=memory,
                 template=st.session_state['prompt'])
 
     # display user message in chat message container
@@ -164,13 +193,20 @@ if user_input:
 
         st.session_state['is_responding'] = False
 
-    st.session_state.answers.append(chatbot_response)
+    print(f"Translated text: {chatbot_response}")
+
+    if language_code != 'en':
+        response_in_dest = asyncio.run(translate_text(chatbot_response, destination_lang=language_code))
+    else:
+        response_in_dest = chatbot_response
+
+    st.session_state.answers.append(response_in_dest)
     st.session_state.messages.append(
-        {"role": "assistant", "content": chatbot_response})
+        {"role": "assistant", "content": response_in_dest})
 
     st.session_state['answers_timestamp'].append(time.time())
 
-    if "Unknown data" in chatbot_response:
+    if "Unknown data" in response_in_dest:
         fallbackrate_counter += 1
 
     if st.session_state.chat_disabled:
@@ -185,7 +221,7 @@ conversation_history = [["what is today's date", *st.session_state['questions']]
 st.session_state['questions'] = []
 st.session_state['answers'] = []
 st.session_state.messages = []
-st.session_state['model'] = "gpt-4o-mini"
+st.session_state['model'] = "ft:gpt-4o-mini-2024-07-18:cylabafrica-ml-team::AnjdsoKG"
 st.session_state["temperature"] = 0.4
 
 
