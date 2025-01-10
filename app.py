@@ -43,7 +43,7 @@ st.sidebar.title("National ID Agency of Ethiopia's Help Chatbot - GPT version")
 
 st.sidebar.markdown("Please use English, Oromiffa, Tigregna and Amharic (with both Latin and Ge'ez alphabet), This one uses a translation layer; from Google translate so languages apart from English may seem weird. ")
 st.sidebar.markdown("N.B. The Amharic with Latin script, is still work in progress and you may see some inconsistencies. ")
-st.sidebar.markdown("N.B. --  While English works reasonably well Amharic is not as good, so try to be as specific as possible.")
+st.sidebar.markdown("N.B. While English works reasonably well Amharic is not as good, so try to be as specific as possible.")
 
 # st.sidebar.markdown(
 #     "1. Thumbs up 👍: click when you are satisfied by the answer provided by the chatbot \n 2. Thumbs down 👎: click when you are not satisfied by the answer provided by the chatbot. \n \n \n \n \n \n \n \n"
