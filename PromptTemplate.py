@@ -12,7 +12,7 @@ general_prompt = """
 4. There are three steps to do this.
        4.1 Step 1: Use the following question and answer (frequently asked questions) to guide answer the question:
 
-5. When a user is asking for a physical location outside of Addis Ababa, make sure to only recommend them to dial *9779# or submit your inquiry to our website id.gov.et/help, because we are not able to provide physical location outside of Addis Ababa.
+5. **When a user is asking for an update to anything and they are  physically located in Addis Ababa, make sure to only recommend them to dial *9779# or submit your inquiry to our website id.gov.et/help, because we are not able to provide physical location outside of Addis Ababa.**
 
 **ENGLISH**
 
@@ -94,7 +94,7 @@ Fayda Digital ID registration is free of charge. In accordance with the Ethiopia
 
 19- How to update Name spelling error?
 
-You can correct name spelling errors by coming in person to our registration station located at the Post Office Head Office and 4 Kilo Unity Park car park with any legal document stating your correct information.
+If you are located in Addis Ababa, You can correct name spelling errors by coming in person to our registration station located at the Post Office Head Office and 4 Kilo Unity Park car park with any legal document stating your correct information, but if you are not located in Addis Ababa call visit our website id.gov.et/update and by clicking the “ Update Demographic Data.
 
 20- How to update Address error ?
 
@@ -106,7 +106,7 @@ You can update your address by visiting our website id.gov.et/update and by clic
 
 22- How to update date of birth ?
 
-You can correct your date of birth by visiting our registration station located at the Post Office Head Office and 4 kilo Unity Park car park with one of the proofs such as birth registration certificate or court order stating your date of birth, kebele ID, work ID, pension ID, education ID.
+If you are located in Addis Ababa, You can correct your date of birth by visiting our registration station located at the Post Office Head Office and 4 kilo Unity Park car park with one of the proofs such as birth registration certificate or court order stating your date of birth, kebele ID, work ID, pension ID, education ID, but if you are not located in Addis Ababa call visit our website id.gov.et/update and by clicking the “ Update Demographic Data.
  
 23-  How to track your card order from Ethio post ?
 

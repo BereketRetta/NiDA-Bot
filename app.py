@@ -147,6 +147,9 @@ if user_input:
 
     # language_code, confidence = langid.classify(user_input)
 
+
+    print(f"User Input Q: {user_input}")
+
     language_code = asyncio.run(detect_language(user_input))
 
     print(f"Detected language Q: {language_code}")
@@ -155,8 +158,8 @@ if user_input:
         user_input_transliterated = None
     else:
         user_input_transliterated = get_transliteration(user_input, 1)
-        print("User input>>>> ", user_input)
-        print("Transliterated input>>>> ", user_input_transliterated)
+        
+    print("Transliterated input>>>> ", user_input_transliterated)
 
     if user_input_transliterated == None or user_input_transliterated == '':
         main_input = user_input
@@ -164,7 +167,7 @@ if user_input:
     else:
         main_input = user_input_transliterated
         language_code = asyncio.run(detect_language(user_input_transliterated))
-
+    print("Main Input>>>> ", main_input)
     if language_code != 'en':
         Question_In_English = asyncio.run(translate_text(main_input, destination_lang='en'))
     else:
@@ -193,13 +196,14 @@ if user_input:
 
         st.session_state['is_responding'] = False
 
-    print(f"Translated text: {chatbot_response}")
+    print(f"Translated text Output: {chatbot_response}")
 
     if language_code != 'en':
         response_in_dest = asyncio.run(translate_text(chatbot_response, destination_lang=language_code))
     else:
         response_in_dest = chatbot_response
 
+    print("Local Language Translated >>>> ",response_in_dest)
     st.session_state.answers.append(response_in_dest)
     st.session_state.messages.append(
         {"role": "assistant", "content": response_in_dest})
