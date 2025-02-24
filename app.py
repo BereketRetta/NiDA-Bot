@@ -16,15 +16,14 @@ from constants import (
     OPENAI_API_KEY,
 )
 import asyncio
-# Translation
-from googletrans import Translator
 
-translator = Translator()
+from googletrans import Translator
 
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
-# Load service account credentials
+translator = Translator()
+
 SERVICE_ACCOUNT_FILE = "nid-chatbot-20aa3aa6daed.json"
 SCOPES = ["https://www.googleapis.com/auth/documents.readonly"]
 

@@ -14,3 +14,7 @@ google-cloud-secret-manager
 langchain-community==0.2.5
 langid
 googletrans==4.0.2
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+googleapiclient
