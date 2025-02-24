@@ -21,6 +21,31 @@ from googletrans import Translator
 
 translator = Translator()
 
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+
+# Load service account credentials
+SERVICE_ACCOUNT_FILE = "nid-chatbot-20aa3aa6daed.json"
+SCOPES = ["https://www.googleapis.com/auth/documents.readonly"]
+
+credentials = service_account.Credentials.from_service_account_file(
+    SERVICE_ACCOUNT_FILE, scopes=SCOPES
+)
+
+docs_service = build("docs", "v1", credentials=credentials)
+
+DOCUMENT_ID = "1gQJIzWNtvVwscRdUYNJaacjKTaI_ykmxZ4ASiehneWQ"
+
+def fetch_google_doc():
+    document = docs_service.documents().get(documentId=DOCUMENT_ID).execute()
+    content = ""
+    for element in document["body"]["content"]:
+        if "paragraph" in element:
+            for text_run in element["paragraph"]["elements"]:
+                if "textRun" in text_run:
+                    content += text_run["textRun"]["content"] + "\n"
+    return content.strip()
+
 async def detect_language(text):
     translator = Translator()
     detected_lang = await translator.detect(text)
@@ -147,14 +172,13 @@ if user_input:
 
     # language_code, confidence = langid.classify(user_input)
 
-
     print(f"User Input Q: {user_input}")
 
     language_code = asyncio.run(detect_language(user_input))
 
     print(f"Detected language Q: {language_code}")
 
-    if language_code == 'en' or language_code == 'am' or language_code == 'om':
+    if language_code == 'en' or language_code == 'am' or language_code == 'om' or language_code == 'ti':
         user_input_transliterated = None
     else:
         user_input_transliterated = get_transliteration(user_input, 1)
@@ -178,6 +202,12 @@ if user_input:
     # creating memory for the chatbot (this takes conversation_history and keeps the last 5 question-answer pairs )
     memory = openAI.getMemoryConversation(conversation_history, 20)
 
+    # Fetch the current FAQ from google docs
+    current_faq = fetch_google_doc()
+
+    # combine current_faq and st.session_state['prompt']
+    st.session_state['prompt'] = pt.generate_prompt(current_faq)
+
     data = dict(query=Question_In_English, memory=memory,
                 template=st.session_state['prompt'])
 
@@ -196,7 +226,7 @@ if user_input:
 
         st.session_state['is_responding'] = False
 
-    print(f"Translated text Output: {chatbot_response}")
+    print(f"Translated (EN) text Output: {chatbot_response}")
 
     if language_code != 'en':
         response_in_dest = asyncio.run(translate_text(chatbot_response, destination_lang=language_code))
