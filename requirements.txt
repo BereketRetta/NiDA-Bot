@@ -17,4 +17,3 @@ googletrans==4.0.2
 google-auth
 google-auth-oauthlib
 google-auth-httplib2
-googleapiclient
